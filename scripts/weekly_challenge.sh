@@ -1,0 +1,90 @@
+#!/bin/bash
+# Weekly challenge script for OpenClaw AI learning assistant
+# Runs at 8:00 AM Taipei time every Monday
+
+set -euo pipefail
+
+LOG_FILE="/Users/daniel.chang/Desktop/ai/logs/weekly_challenge_$(date +%Y-%m-%d).log"
+CORE_LEARNING_DIR="/Users/daniel.chang/Desktop/ai/core_learning"
+WEEKLY_CHALLENGES_DIR="/Users/daniel.chang/Desktop/ai/weekly-challenges"
+
+# Ensure directories exist
+mkdir -p "$(dirname "$LOG_FILE")"
+mkdir -p "$WEEKLY_CHALLENGES_DIR"
+
+{
+  echo "=== Weekly Challenge Started: $(date) ==="
+
+  # Determine the week number and year for the challenge file
+  YEAR=$(date +%Y)
+  WEEK=$(date +%V)   # ISO week number
+  CHALLENGE_FILE="$WEEKLY_CHALLENGES_DIR/${YEAR}-W${WEEK}-challenge.md"
+
+  # Start the challenge file
+  echo "# 每週進階挑戰 - 第 ${WEEK} 週 (${YEAR})" > "$CHALLENGE_FILE"
+  echo "" >> "$CHALLENGE_FILE"
+  echo "*生成時間: $(date '+%Y-%m-%d %H:%M:%S')*" >> "$CHALLENGE_FILE"
+  echo "" >> "$CHALLENGE_FILE"
+  echo "## 本週主題：結合 Agentic Workflow 與 定時任務的進階整合" >> "$CHALLENGE_FILE"
+  echo "" >> "$CHALLENGE_FILE"
+
+  # Function to generate a challenge prompt
+  generate_challenge() {
+    local challenge_num=$1
+    local challenge_title=$2
+    local challenge_desc=$3
+    echo "### 挑戰 ${challenge_num}: ${challenge_title}" >> "$CHALLENGE_FILE"
+    echo "" >> "$CHALLENGE_FILE"
+    echo "${challenge_desc}" >> "$CHALLENGE_FILE"
+    echo "" >> "$CHALLENGE_FILE"
+    echo "**實作要求：**" >> "$CHALLENGE_FILE"
+    echo "" >> "$CHALLENGE_FILE"
+  }
+
+  # Challenge 1: Build a personal news agent that runs daily
+  generate_challenge 1 "個人新聞代理人" "建立一個每天早上 8:00 自動運行的新聞代理人，能夠：
+- 搜尋使用者指定的主題（例如：AI、程式設計、科技新聞）
+-  summarise the top 3 articles
+- 將摘要存入知識庫
+- 如果發現緊急新聞（包含特定關鍵字如「突發」、「重要」），則透過 Discord 通知使用者"
+
+  # Challenge 2: Create a skill for a specific MCP server
+  generate_challenge 2 "MCP 技能開發" "開發一個 OpenClaw Skill，封裝對特定 MCP 伺服器的操作。例如：
+- 建立一個 Skills，用於與本地檔案系統 MCP 伺服器互動（讀寫文件、列出目錄等）
+- 或開發一個與 GitHub MCP 伺服器互動的 Skill（列出 issue、創建 PR 等）
+- 該 Skill 應該包含完整的 SKILL.md 和範例腳本"
+
+  # Challenge 3: Design a conditional agentic workflow for system health
+  generate_challenge 3 "系統健康檢查工作流" "設計一個 Agentic Workflow，能夠：
+- 每天早上 8:00 檢查系統健康狀態（CPU、記憶體、磁碟空間）
+- 根據檢查結果執行不同的行動：
+  * 如果 CPU 使用率 > 90%：嘗試找出並終止資源佔用過高的進程
+  * 如果磁碟空間 < 10%：清理暫存文件並發出警告
+  * 如果一切正常：僅記錄健康狀態到日誌
+- 工作流應該能夠從過去的檢查中學習，例如識別週期性的資源佔用模式"
+
+  # Challenge 4: Integrate multiple skills into a coherent assistant
+  generate_challenge 4 "多技能整合助理" "建立一個能夠整合多個現有 Skills 的複雜助理。例如：
+- 當使用者說「幫我準備明天的會議」時，助理應該能夠：
+  1. 查看日曆中的明天會議（使用 apple-reminders 或其他日曆工具）
+  2. 為每個會議搜尋相關的最新資訊（使用 web_search）
+  3. 生成會議簡報並存入知識庫
+  4. 如果會議需要閱讀預先材料，則從知識庫中檢索並摘要
+- 這個助理應該能夠處理自然語言請求，並自動決定使用哪些 Skills"
+
+  echo "---" >> "$CHALLENGE_FILE"
+  echo "" >> "$CHALLENGE_FILE"
+  echo "## 如何提交您的解答" >> "$CHALLENGE_FILE"
+  echo "" >> "$CHALLENGE_FILE"
+  echo "1. 在您的工作空間中實作上述挑戰之一或多個" >> "$CHALLENGE_FILE"
+  echo "2. 將您的解答（腳本、技能、工作流描述等）放入 `/Users/daniel.chang/Desktop/ai/solutions/${YEAR}-W${WEEK}/` 目錄中" >> "$CHALLENGE_FILE"
+  echo "3. 您可以選擇性地在 Discord 的 #openclaw 頻道中分享您的解答和學習心得" >> "$CHALLENGE_FILE"
+  echo "" >> "$CHALLENGE_FILE"
+  echo "***祝您挑戰愉快！***" >> "$CHALLENGE_FILE"
+
+  echo "=== Weekly Challenge Completed: $(date) ==="
+} >> "$LOG_FILE" 2>&1
+
+# Also output to console for immediate feedback (if running interactively)
+echo "Weekly challenge generated. Log: $LOG_FILE"
+echo "Challenge file: $CHALLENGE_FILE"

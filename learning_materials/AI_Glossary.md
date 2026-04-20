@@ -1,0 +1,124 @@
+# AI 術語表 (Glossary)
+*自動生成於: 2026-04-20 21:18:47*
+
+以下是從所有學習文件中提取的核心術語列表：
+
+- **AutoGen**
+- **CrewAI**
+- **LangGraph**
+- **Q4_K_M**
+- **openclaw**
+- AI（人工智慧）
+- AutoGen
+- Chain-of-Thought (CoT):
+- Conditional
+- Context Window
+- CrewAI
+- Deep Learning
+- Embedding
+- Embedding 模型:
+- Episodic
+- Executor
+- Few-shot Prompting:
+- Fine-tuning
+- Hybrid Search:
+- Inference
+- Iterative
+- LangChain
+- LangGraph
+- LlamaIndex
+- Long-term
+- Machine Learning（ML）
+- Memory 系統:
+- Orchestrator 職責
+- Parallel
+- Plan-and-Execute:
+- Planner
+- Prompt Injection:
+- Q2_K
+- Q3_K_M
+- Q4_K_M
+- Q5_K_M
+- Q6_K
+- Q8_0
+- ReAct (Reasoning and Acting):
+- ReAct = Reasoning + Acting
+- Replanner
+- Self-Attention 機制:
+- Semantic
+- Sequential
+- Short-term
+- Structured Output:
+- Temperature
+- Token
+- Tools/Functions Calling:
+- Transformer 架構:
+- Worker 職責
+- Zero-shot Prompting:
+- `arcee-ai/trinity-large-preview:free`
+- `gemma4:e4b`
+- `gemma4:latest`
+- `google/gemma-4-26b-a4b-it:free`
+- `nomic-embed-text:latest`
+- `nvidia/nemotron-3-super-120b:free`
+- `openai/gpt-oss-120b:free`
+- deepseek-r1:8b
+- gemma3:1b
+- gemma3:4b
+- gemma4:12b
+- gemma4:27b
+- openclaw
+- qwen3:8b
+- 中等
+- 位置編碼 (Positional Encoding):
+- 優點
+- 儲存 (Storage):
+- 內容
+- 具體指令
+- 分數解讀
+- 切塊 (Chunking):
+- 句子切分
+- 向量資料庫 (Vector Database)
+- 向量資料庫:
+- 問題
+- 固定大小
+- 安全邊界 (Safety):
+- 實務應用:
+- 嵌入 (Embedding):
+- 建議
+- 建議優先下載
+- 建議的安全邊界設定
+- 建議起點
+- 循環的思考-行動-觀察 (Observe-Think-Act)
+- 應用場景
+- 指標
+- 提供脈絡
+- 明確角色
+- 有向圖（DAG）
+- 檢索 (Retrieval):
+- 流程:
+- 特色
+- 狀態管理 (State Management):
+- 現有模型
+- 生成 (Generation):
+- 精度
+- 缺點
+- 自動評測與回歸測試
+- 衡量
+- 解法
+- 語意切分
+- 載入 (Loading):
+- 迭代優化
+- 速度
+- 重疊切分
+- 防禦策略
+- 防禦策略:
+- 限制格式
+- 風險
+- 餘弦相似度 (Cosine Similarity)
+
+*共 113 個術語*
+
+---
+
+*說明：此詞彙表僅列出術語，詳細定義請參考對應的學習筆記。*
