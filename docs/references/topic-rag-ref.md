@@ -1,14 +1,16 @@
-# Reference: RAG Beginner Guide
+# RAG 參考資料
 
-**Source:** https://dev.to/egepakten/what-is-rag-a-beginners-guide-to-retrieval-augmented-generation-with-a-full-pipeline-walkthrough-3djm
+> 最後更新：2025-05-30
 
-**Title:** What is RAG? A Beginner's Guide to Retrieval-Augmented Generation (With a Full Pipeline Walkthrough)
+## 來源清單
 
-**Key Points:**
-- RAG combines a parametric memory (LLM weights) with a non‑parametric memory (searchable document store) to improve factuality.
-- Core pipeline: Load documents → Chunk → Embed → Store in vector DB → Retrieve relevant chunks → Generate answer with LLM.
-- Embedding models (e.g., BGE, text‑embedding‑ada‑2) turn text chunks into vectors.
-- Vector databases such as Chroma or Pinecone enable efficient similarity search.
-- Hybrid search (vector + BM25) can boost accuracy.
-- Motivations include LLM stale knowledge, hallucinations, and the need for up‑to‑date domain‑specific info.
-- Practical tips: choose appropriate chunk size, batch embeddings, and tune index parameters (IVF‑PQ).
+### 來源 1：Retrieval-Augmented Generation: A Comprehensive Survey of Architectures, Enhancements, and Robustness Frontiers
+- **URL / arXiv ID**：https://arxiv.org/abs/2506.00054 或 arXiv:2506.00054
+- **類型**：論文 / 官方文件
+- **作者 / 機構**：（作者未列於摘要，但為多機構合作）
+- **發表年份**：2025
+- **可信度**：高 / 中（依據：機構背景、引用數、同儕審查）
+- **主要貢獻摘要**：
+  這篇論文系統性回顧了檢索增強生成（RAG）的最新進展，提供了檢索導向、生成導向、混合式及健全性導向的架構分類。它分析了檢索優化、上下文過濾、解碼控制及效能改進等增強技術，並以短文質與多跳問答任務為基礎進行比較效能分析。論文同時評論了最新的評估框架與基準，強調了檢索感知評估、健全性測試及聯邦檢索等新興趨勢。結論指出了檢索精度與生成彈性、效率與忠實度、模組化與協調性之間的反直覺取捨，並提出了未來研究方向，包括自適應檢索架構、實時檢索整合、結構化推理與隱私保護機制。此來源為本文「進階 RAG 技術」章節的核心文獻，提供了官方的學術調研與技術分類依據。
+- **用於文件的哪個章節**：進階 RAG 技術（2025-2026 最新進展）
+- **與現有文件的差異**：提供了官方學術層面的 RAG 系統分類與最新增強技術的系統性總結，內含未在原有文件中涵蓋的架構分類與性能比較資訊。
