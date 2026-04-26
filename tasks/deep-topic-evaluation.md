@@ -1,68 +1,41 @@
-# 深度學習任務清單 - topic-evaluation
+# 深度學習任務 - AI 模型評測框架指南
 
-## 架構深度解析
-- [ ] 了解原理
-- [ ] 流程圖說明
-- [ ] 核心元件拆解
+> 建立日期：2026-04-26
+> 對應 doc：/Users/daniel.chang/Desktop/ai/docs/topic-evaluation.md
+> 狀態：待執行
 
-## 實作範例
-- [ ] 完整可執行程式碼範例（含環境設定）
+## 為何需要補強
+- 主文內容估計：637 字
+- 主文內容估計僅 637 字，低於 1500 字門檻
+- 缺少 arXiv / DOI / 官方技術來源引用
+- 缺少更新記錄章節
+- 缺少限制、trade-off 或適用場景分析
+- 缺少關鍵名詞 / 專案 / 框架的深入拆解
+- 缺少最小驗證步驟或練習
 
-### 參考程式碼片段
-**片段 1：**
-```
-bash
-pip install lm-eval
+## Docs-first 執行規則
+- [ ] 先修改對應 doc 主文，再補 references，最後才更新 task 狀態
+- [ ] 不可只重寫 task 模板或只補摘要
+- [ ] 本任務完成的判定標準是 doc 深度提升，而不是 task 被勾選
 
-# 評測本地 Ollama 模型
-lm_eval --model local-completions \
-  --model_args base_url=http://localhost:11434/v1,model=gemma4 \
-  --tasks mmlu \
-  --num_fewshot 5
-```
+## 必達驗收標準
+- [ ] 至少補上 1 個 arXiv / DOI / 官方技術來源
+- [ ] 至少補上 1 個可執行範例（含環境設定）
+- [ ] 補上關鍵名詞 / 專案 / 框架的定義、核心機制、限制與替代方案
+- [ ] 補上 trade-off、適用場景與不適用場景
+- [ ] 補上更新記錄
+- [ ] 補上最小驗證步驟或練習
 
-**片段 2：**
-```
-python
-import ollama
+## 建議研究方向
+- [ ] 原始論文（arXiv / DOI）
+- [ ] 官方文件或框架文件
+- [ ] 生產環境實作案例 / 工程部落格
+- [ ] 2025-2026 最新進展與衍生技術
 
-test_cases = [
-    {"prompt": "2 + 2 = ?", "expected": "4"},
-    {"prompt": "台灣首都是哪裡？", "expected": "台北"},
-]
+## 參考來源（執行後補充）
+- [ ] 論文：
+- [ ] 官方文件：
+- [ ] 工程部落格：
 
-for case in test_cases:
-    resp = ollama.chat(model='gemma4', messages=[{"role":"user","content":case["prompt"]}])
-    answer = resp['message']['content']
-    passed = case["expected"] in answer
-    print(f"{'✅' if passed else '❌'} {case['prompt'][:20]}...")
-```
-
-
-## 應用場景
-- [ ] 案例 1
-- [ ] 案例 2
-- [ ] 案例 3
-
-### 相關概念與術語
-- 內容
-- 衡量
-- 分數解讀
-- 指標
-- 自動評測與回歸測試
-- 應用場景
-
-## 擴充與進階
-- [ ] 進階技術
-- [ ] 變體
-- [ ] 相關論文
-
-## 優化技巧
-- [ ] 常見問題與解決方案
-- [ ] 效能調優方法
-
-## 參考資源
-- [ ] 搜尋相關文章並填入 URL
-
-*此文件由腳本自動生成，來源：topic-evaluation.md*
-*生成時間：2026-04-21 20:06:43*
+*此文件由腳本自動生成，內容為 docs 缺口稽核結果*
+*生成時間：2026-04-26 16:34:34*

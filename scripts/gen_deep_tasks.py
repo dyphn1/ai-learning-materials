@@ -1,126 +1,134 @@
 #!/usr/bin/env python3
 """
-Generate deep learning task files from the topic markdown files in docs/.
-Each deep-*.md will be filled with sections based on the source file.
+Generate targeted deep-dive task files only for docs that fail quality gates.
+
+The goal is to keep tasks as a small backlog of concrete doc gaps, instead of
+mass-producing generic templates that duplicate the source docs.
 """
 
-import os
+import datetime
 import re
 from pathlib import Path
 
 DOCS_DIR = Path("/Users/daniel.chang/Desktop/ai/docs")
 TASKS_DIR = Path("/Users/daniel.chang/Desktop/ai/tasks")
 
-# Mapping from task file to source file (if not direct)
-# Actually deep-level1-ai-basics.md corresponds to level1-ai-basics.md, etc.
-# So we can derive source name by removing 'deep-' prefix and maybe adjusting.
-def source_filename(task_name: str) -> str:
-    # task_name like "deep-level1-ai-basics.md"
-    # remove 'deep-' -> "level1-ai-basics.md"
-    if task_name.startswith("deep-"):
-        return task_name[5:]
-    return task_name
+MIN_CONTENT_CHARS = 1500
+AUTO_GENERATED_MARKER = "*此文件由腳本自動生成"
+PAPER_PATTERN = re.compile(
+    r"arxiv:\d{4}\.\d{4,5}|https?://(?:arxiv\.org/abs/|doi\.org/)",
+    re.IGNORECASE,
+)
 
-def extract_sections(content):
-    """Extract some useful sections from markdown: maybe tables, bold terms, code blocks."""
-    # We'll just return some placeholder content for now.
-    # But we can try to extract useful bits.
-    sections = {}
-    # Find tables
-    table_pattern = r'(\|.*\|\n\|[-\s|]+\|\n(?:\|.*\|\n)+)'
-    tables = re.findall(table_pattern, content)
-    sections['tables'] = tables[:2]  # limit
-    
-    # Find bold terms
-    bold_pattern = r'\*\*([^*]+)\*\*'
-    bold_terms = re.findall(bold_pattern, content)
-    # filter
-    common = {'和', '或', '但', '的', '了', '是', '在', '有', '這', '那', '與', '及', '等'}
-    filtered = [t.strip() for t in bold_terms if len(t.strip()) > 1 and t.strip() not in common and not t.strip().isdigit()]
-    sections['bold_terms'] = list(dict.fromkeys(filtered))[:20]
-    
-    # Find code blocks
-    code_pattern = r'```[^`]*```'
-    code_blocks = re.findall(code_pattern, content, re.DOTALL)
-    sections['code_blocks'] = [b.strip('` \n') for b in code_blocks if b.strip('` \n')][:3]
-    
-    # Extract first few lines after each heading maybe.
-    # We'll just return the sections.
-    return sections
+def task_filename(source_name: str) -> str:
+    return f"deep-{source_name}"
 
-def generate_deep_content(source_path: Path, task_path: Path):
-    try:
-        with open(source_path, 'r', encoding='utf-8') as f:
-            content = f.read()
-    except Exception as e:
-        print(f"Error reading {source_path}: {e}")
-        return
-    
+def strip_code_blocks(content: str) -> str:
+    return re.sub(r"```.*?```", " ", content, flags=re.DOTALL)
+
+
+def estimate_content_chars(content: str) -> int:
+    text = strip_code_blocks(content)
+    text = re.sub(r"!\[[^\]]*\]\([^\)]*\)", " ", text)
+    text = re.sub(r"\[[^\]]*\]\([^\)]*\)", " ", text)
+    text = re.sub(r"[#>*_`|\-]", " ", text)
+    text = re.sub(r"\s+", "", text)
+    return len(text)
+
+
+def is_auto_generated_task(task_path: Path) -> bool:
+    if not task_path.exists():
+        return False
+    content = task_path.read_text(encoding="utf-8")
+    return AUTO_GENERATED_MARKER in content
+
+
+def audit_doc(source_path: Path) -> dict:
+    content = source_path.read_text(encoding="utf-8")
     title_match = re.search(r'^#\s+(.+)$', content, re.MULTILINE)
     title = title_match.group(1).strip() if title_match else source_path.stem
-    
-    sections = extract_sections(content)
-    
-    # Build the deep task content
+
+    content_chars = estimate_content_chars(content)
+    has_paper_ref = bool(PAPER_PATTERN.search(content))
+    has_code_example = "```python" in content or "```bash" in content
+    has_update_record = "## 更新記錄" in content
+    has_tradeoff = "trade-off" in content.lower() or "限制" in content or "適用場景" in content
+    has_term_breakdown = any(
+        marker in content
+        for marker in ["什麼是", "核心概念", "關鍵名詞", "術語", "概覽與設計動機"]
+    )
+    has_validation = any(
+        marker in content
+        for marker in ["驗證", "實驗", "練習", "預期觀察", "快速實驗步驟"]
+    )
+
+    missing_items = []
+    if content_chars < MIN_CONTENT_CHARS:
+        missing_items.append(f"主文內容估計僅 {content_chars} 字，低於 {MIN_CONTENT_CHARS} 字門檻")
+    if not has_paper_ref:
+        missing_items.append("缺少 arXiv / DOI / 官方技術來源引用")
+    if not has_code_example:
+        missing_items.append("缺少可執行範例（至少一段 python 或 bash）")
+    if not has_update_record:
+        missing_items.append("缺少更新記錄章節")
+    if not has_tradeoff:
+        missing_items.append("缺少限制、trade-off 或適用場景分析")
+    if not has_term_breakdown:
+        missing_items.append("缺少關鍵名詞 / 專案 / 框架的深入拆解")
+    if not has_validation:
+        missing_items.append("缺少最小驗證步驟或練習")
+
+    return {
+        "title": title,
+        "doc_path": str(source_path),
+        "content_chars": content_chars,
+        "missing_items": missing_items,
+        "needs_task": bool(missing_items),
+    }
+
+def build_task_content(audit: dict) -> str:
+    now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    today = datetime.date.today().isoformat()
+
     lines = []
-    lines.append(f"# 深度學習任務清單 - {source_path.stem}")
+    lines.append(f"# 深度學習任務 - {audit['title']}")
     lines.append("")
-    lines.append("## 架構深度解析")
-    lines.append("- [ ] 了解原理")
-    lines.append("- [ ] 流程圖說明")
-    lines.append("- [ ] 核心元件拆解")
+    lines.append(f"> 建立日期：{today}")
+    lines.append(f"> 對應 doc：{audit['doc_path']}")
+    lines.append("> 狀態：待執行")
     lines.append("")
-    lines.append("## 實作範例")
-    lines.append("- [ ] 完整可執行程式碼範例（含環境設定）")
-    if sections['code_blocks']:
-        lines.append("")
-        lines.append("### 參考程式碼片段")
-        for i, cb in enumerate(sections['code_blocks'][:2], 1):
-            lines.append(f"**片段 {i}：**")
-            lines.append("```")
-            lines.append(cb)
-            lines.append("```")
-            lines.append("")
+    lines.append("## 為何需要補強")
+    lines.append(f"- 主文內容估計：{audit['content_chars']} 字")
+    for item in audit['missing_items']:
+        lines.append(f"- {item}")
     lines.append("")
-    lines.append("## 應用場景")
-    lines.append("- [ ] 案例 1")
-    lines.append("- [ ] 案例 2")
-    lines.append("- [ ] 案例 3")
-    if sections['bold_terms']:
-        lines.append("")
-        lines.append("### 相關概念與術語")
-        for term in sections['bold_terms'][:10]:
-            lines.append(f"- {term}")
+    lines.append("## Docs-first 執行規則")
+    lines.append("- [ ] 先修改對應 doc 主文，再補 references，最後才更新 task 狀態")
+    lines.append("- [ ] 不可只重寫 task 模板或只補摘要")
+    lines.append("- [ ] 本任務完成的判定標準是 doc 深度提升，而不是 task 被勾選")
     lines.append("")
-    lines.append("## 擴充與進階")
-    lines.append("- [ ] 進階技術")
-    lines.append("- [ ] 變體")
-    lines.append("- [ ] 相關論文")
-    if sections['tables']:
-        lines.append("")
-        lines.append("### 參考表格")
-        for i, table in enumerate(sections['tables'][:2], 1):
-            lines.append(f"**表格 {i}：**")
-            lines.append(table)
-            lines.append("")
+    lines.append("## 必達驗收標準")
+    lines.append("- [ ] 至少補上 1 個 arXiv / DOI / 官方技術來源")
+    lines.append("- [ ] 至少補上 1 個可執行範例（含環境設定）")
+    lines.append("- [ ] 補上關鍵名詞 / 專案 / 框架的定義、核心機制、限制與替代方案")
+    lines.append("- [ ] 補上 trade-off、適用場景與不適用場景")
+    lines.append("- [ ] 補上更新記錄")
+    lines.append("- [ ] 補上最小驗證步驟或練習")
     lines.append("")
-    lines.append("## 優化技巧")
-    lines.append("- [ ] 常見問題與解決方案")
-    lines.append("- [ ] 效能調優方法")
+    lines.append("## 建議研究方向")
+    lines.append("- [ ] 原始論文（arXiv / DOI）")
+    lines.append("- [ ] 官方文件或框架文件")
+    lines.append("- [ ] 生產環境實作案例 / 工程部落格")
+    lines.append("- [ ] 2025-2026 最新進展與衍生技術")
     lines.append("")
-    lines.append("## 參考資源")
-    lines.append("- [ ] 搜尋相關文章並填入 URL")
+    lines.append("## 參考來源（執行後補充）")
+    lines.append("- [ ] 論文：")
+    lines.append("- [ ] 官方文件：")
+    lines.append("- [ ] 工程部落格：")
     lines.append("")
-    lines.append(f"*此文件由腳本自動生成，來源：{source_path.name}*")
-    lines.append(f"*生成時間：{os.popen('date +%Y-%m-%d\\ %H:%M:%S').read().strip()}*")
-    
-    # Write to task file
-    try:
-        with open(task_path, 'w', encoding='utf-8') as f:
-            f.write('\n'.join(lines))
-        print(f"Generated deep task: {task_path}")
-    except Exception as e:
-        print(f"Error writing {task_path}: {e}")
+    lines.append("*此文件由腳本自動生成，內容為 docs 缺口稽核結果*")
+    lines.append(f"*生成時間：{now}*")
+    return '\n'.join(lines)
 
 def main():
     if not DOCS_DIR.exists():
@@ -129,15 +137,25 @@ def main():
     if not TASKS_DIR.exists():
         print(f"Tasks directory not found: {TASKS_DIR}")
         return
-    
-    # Process each deep-*.md in tasks/
-    for task_file in TASKS_DIR.glob("deep-*.md"):
-        source_name = source_filename(task_file.name)
-        source_path = DOCS_DIR / source_name
-        if not source_path.exists():
-            print(f"Source file not found for {task_file.name}: {source_path}")
+
+    for source_path in sorted(DOCS_DIR.glob("*.md")):
+        audit = audit_doc(source_path)
+        task_path = TASKS_DIR / task_filename(source_path.name)
+
+        if not audit["needs_task"]:
+            if is_auto_generated_task(task_path):
+                task_path.unlink()
+                print(f"Removed stale auto-generated task: {task_path.name}")
+            else:
+                print(f"Skip {source_path.name}: meets quality gates")
             continue
-        generate_deep_content(source_path, task_file)
+
+        if task_path.exists() and not is_auto_generated_task(task_path):
+            print(f"Skip {task_path.name}: manual task file preserved")
+            continue
+
+        task_path.write_text(build_task_content(audit), encoding="utf-8")
+        print(f"Generated targeted task: {task_path.name}")
 
 if __name__ == "__main__":
     main()
