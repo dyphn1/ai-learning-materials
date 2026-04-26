@@ -1,7 +1,18 @@
-# Multi-Agent 系統指南
+# Multi-Agent 系統指南 學習筆記
 *來源檔案: topic-multi-agent.md*
+*同步更新: 2026-04-26*
 
-## 核心概念
+## 一句話理解
+*無法自動摘要，請回看主文的概覽與設計動機章節。*
+
+## 必記重點
+- **CrewAI**
+- **AutoGen**
+- **LangGraph**
+- **openclaw**
+- Orchestrator 職責
+
+## 核心名詞速記
 - **CrewAI**
 - **AutoGen**
 - **LangGraph**
@@ -10,27 +21,13 @@
 - Worker 職責
 - CrewAI
 - AutoGen
-- LangGraph
-- openclaw
 
-## 實作範例
-### 範例 1
-```
-用戶請求
-    │
-    ▼
-Orchestrator（規劃 & 協調）
-    │
-    ├→ Worker A（程式碼生成）
-    ├→ Worker B（網路搜尋）
-    └→ Worker C（文件整理）
-    │
-    ▼
-整合結果 → 回覆用戶
-```
+## 必背公式
+*本篇無核心公式*
 
-### 範例 2
-```
+## 實作範例重點
+### 範例片段
+```python
 from crewai import Agent, Task, Crew
 
 researcher = Agent(role="研究員", goal="蒐集資訊", ...)
@@ -40,16 +37,5 @@ crew = Crew(agents=[researcher, writer], tasks=[...])
 result = crew.kickoff()
 ```
 
-### 範例 3
-```
-from autogen import AssistantAgent, UserProxyAgent
-
-assistant = AssistantAgent("assistant", llm_config={...})
-user_proxy = UserProxyAgent("user", code_execution_config={...})
-user_proxy.initiate_chat(assistant, message="分析這份資料...")
-```
-
-
----
-
-*生成時間: 2026-04-20 21:18:47*
+## 自我檢查
+*無自我檢查題目*

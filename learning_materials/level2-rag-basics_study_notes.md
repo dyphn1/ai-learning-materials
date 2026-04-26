@@ -1,7 +1,18 @@
-# Level 2：RAG 入門指南
+# Level 2：RAG 入門指南 學習筆記
 *來源檔案: level2-rag-basics.md*
+*同步更新: 2026-04-26*
 
-## 核心概念
+## 一句話理解
+*無法自動摘要，請回看主文的概覽與設計動機章節。*
+
+## 必記重點
+- 固定大小
+- 句子切分
+- 語意切分
+- 重疊切分
+- 問題
+
+## 核心名詞速記
 - 固定大小
 - 句子切分
 - 語意切分
@@ -10,44 +21,18 @@
 - 解法
 - 建議起點
 - LangChain
-- LlamaIndex
 
-## 實作範例
-### 範例 1
-```
-用戶問題 → 向量搜尋知識庫 → 取得相關段落 → LLM 生成回答
-```
+## 必背公式
+*本篇無核心公式*
 
-### 範例 2
-```
+## 實作範例重點
+### 範例片段
+```python
 # 使用 nomic-embed-text（已安裝）
 import ollama
 response = ollama.embeddings(model='nomic-embed-text', prompt='你好')
 vector = response['embedding']  # 長度 768 的浮點陣列
 ```
 
-### 範例 3
-```
-pip install chromadb
-```
-
-### 範例 4
-```
-import chromadb
-client = chromadb.Client()
-collection = client.create_collection("my_docs")
-
-# 新增文件
-collection.add(
-    documents=["文件內容..."],
-    ids=["doc1"]
-)
-
-# 查詢
-results = collection.query(query_texts=["我的問題"], n_results=3)
-```
-
-
----
-
-*生成時間: 2026-04-20 21:18:47*
+## 自我檢查
+*無自我檢查題目*
