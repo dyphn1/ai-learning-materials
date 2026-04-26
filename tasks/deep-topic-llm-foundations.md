@@ -1,35 +1,32 @@
-# 深度學習任務清單 - topic-llm-foundations
+# 深度學習任務 - LLM Foundations (Enhancement)
 
-## 架構深度解析
-- [ ] 了解原理
-- [ ] 流程圖說明
-- [ ] 核心元件拆解
+> 建立日期：2026-04-24
+> 對應 doc：/Users/daniel.chang/Desktop/ai/docs/topic-llm-foundations.md
+> 狀態：待執行
 
-## 實作範例
-- [ ] 完整可執行程式碼範例（含環境設定）
+## 研究重點
+- [ ] 原始論文（arXiv/論文集）閱讀
+- [ ] 核心機制深度說明（不只是概念）
+- [ ] 與前代技術的比較與 trade-off
+- [ ] 實作框架與程式碼範例
+- [ ] 2025-2026 最新進展與衍生技術
+- [ ] 工程落地的注意事項（latency、成本、穩定性）
 
-## 應用場景
-- [ ] 案例 1
-- [ ] 案例 2
-- [ ] 案例 3
+## 參考來源（執行後補充）
+- [ ] 論文：Attention Is All You Need (arXiv:1706.03762)
+- [ ] 工程部落格：Transformer 架構深度解析
+- [ ] 程式庫文件：PyTorch/HuggingFace Transformer 實作
 
-### 相關概念與術語
-- Transformer 架構:
-- Self-Attention 機制:
-- 位置編碼 (Positional Encoding):
-- 實務應用:
+## 已收集資料
+- 現有文件僅 852 字，遠低於 1500 字要求
+- 無任何 arXiv/DOI 引用
+- 無程式碼範例
+- 無更新記錄
 
-## 擴充與進階
-- [ ] 進階技術
-- [ ] 變體
-- [ ] 相關論文
-
-## 優化技巧
-- [ ] 常見問題與解決方案
-- [ ] 效能調優方法
-
-## 參考資源
-- [ ] 搜尋相關文章並填入 URL
-
-*此文件由腳本自動生成，來源：topic-llm-foundations.md*
-*生成時間：2026-04-21 20:06:43*
+## 待執行內容
+- 深度解析 Transformer 架構的數學基礎
+- 詳細說明 Self-Attention 機制的運作原理
+- 加入可執行的 Transformer 實作範例
+- 分析不同變體 (Encoder-only, Decoder-only, Encoder-Decoder) 的 trade-offs
+- 探討 2025-2026 年的最新架構改進
+- 加入工程實作的考量因素
