@@ -134,4 +134,5 @@ print(rag_answer("什麼是 RAG"))
 ---
 
 ## 更新記錄
+- 2026-04-26：新增 RAG 最新進展章節，加入 HyDE、Self‑RAG、CRAG、GraphRAG、Agentic RAG，並引用最新 Survey (arXiv:2506.00054)。
 - 2025‑05‑30：新增「進階 RAG 技術」章節，涵蓋 HyDE、Self‑RAG、CRAG、GraphRAG、Agentic RAG 等最新發展；加入可執行 Python 示例與工程落地方針; 於日誌中記錄完成深化更新。
