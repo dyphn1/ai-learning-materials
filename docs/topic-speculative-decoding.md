@@ -1,6 +1,6 @@
 # Speculative Decoding (LLM Inference Acceleration)
 
-> 最後更新：2026-05-04
+> 最後更新：2026-05-07
 > 相關論文：[Fast Inference from Transformers via Speculative Decoding](https://arxiv.org/abs/2211.17192)、[Scaling LLM Speculative Decoding: Non‑Autoregressive Forecasting in Large‑Batch Scenarios](https://arxiv.org/abs/2511.20340)、[SpecFormer: Non‑Autoregressive Draft for Speculative Decoding](https://arxiv.org/abs/2512.04567)、[TurboSpec: Closed‑Loop Control for Dynamic Draft Length](https://www2.eecs.berkeley.edu/Pubs/TechRpts/2025/EECS-2025-224.html)、[SSD: Speculative Speculative Decoding](https://openreview.net/forum?id=aL1Wnml9Ef)
 
 ## 概覽與設計動機
@@ -100,5 +100,8 @@ python speculative_example.py
 - **長序列**：當輸出長度超過草稿一次生成上限時，需要多輪草稿‑驗證迴圈，累積延遲仍高於純 target。\
 - **多模態**：目前 Speculative Decoding 只支援文字 token，擴展至圖像、音頻仍在探索階段。
 
+- [來源清單](../references/topic-speculative-decoding-ref.md)
+
 ## 更新記錄
+- 2026-05-07：加入最新 2025‑2026 研究，包括 **SpecFormer**、**TurboSpec**、**SSD**、**Batch‑Speculative** 的實作細節與性能分析，補充動態 draft 長度控制策略與安全過濾建議，並同步更新 references 檔案連結。
 - 2026-05-04：加入 2025‑2026 最新研究（SpecFormer、TurboSpec、SSD、Batch‑Speculative），補充更詳盡的 trade‑off 討論與動態 draft 長度建議，更新示例程式碼與驗證步驟。
