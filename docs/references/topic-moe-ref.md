@@ -1,25 +1,12 @@
-# Mixture of Experts (MoE) 參考資料
+# MoE 參考資料
 
-> 最後更新：2026-05-05
-
-## 來源清單
-
-### 來源 1：A Comprehensive Survey of Mixture-of-Experts: Algorithms, Theory, and Applications
-- **URL / arXiv ID**：https://arxiv.org/abs/2503.07137
-- **類型**：論文
-- **作者 / 機構**：Siyuan Mu, Sen Lin 等
-- **發表年份**：2025（預印）
-- **可信度**：高（arXiv 預印，廣受引用）
-- **主要貢獻摘要**：系統性整理 MoE 的演算法、理論基礎與應用，涵蓋門控機制、專家多樣性、訓練技巧與效能評估。
-- **用於文件的哪個章節**：核心機制深度解析、關鍵名詞與專案拆解。
-- **與現有文件的差異**：提供更完整的門控正則化方法與最新實驗結果，補足原始文件中缺失的訓練穩定性討論。
-
-### 來源 2：Towards a Comprehensive Scaling Law of Mixture-of-Experts
+## 來源 1
+- **標題**：Towards a Comprehensive Scaling Law of Mixture-of-Experts
 - **URL / arXiv ID**：https://arxiv.org/abs/2509.23678
 - **類型**：論文
-- **作者 / 機構**：Guoliang Zhao, Yuhan Fu, Shuaipeng Li 等
-- **發表年份**：2025（預印）
-- **可信度**：高（大量實驗，系統性分析）
-- **主要貢獻摘要**：提出 MoE 專屬的縮放律，辨識五個關鍵因素（資料量、總模型大小、激活模型大小、活躍專家數、共享專家比例），並透過 446 場受控實驗量化其影響。
-- **用於文件的哪個章節**：最新進展、工程落地注意事項（特別是 scaling law）
-- **與現有文件的差異**：提供量化的 scaling law，補足原文件僅有概念描述的不足。
+- **作者**：Guoliang Zhao、Yuhan Fu、Shuaipeng Li、Xingwu Sun、Ruobing Xie、An Wang、Weidong Han、Zhen Yang、Weixuan Sun、Yudong Zhang、Cheng-zhong Xu、Di Wang、Jie Jiang
+- **發表年份**：2025 (預印本 2025‑09‑28)
+- **可信度**：高（arXiv 預印本，多位作者，已被引用）
+- **主要貢獻摘要**：系統性分解 MoE 影響因素，提出五個關鍵因子 (D, N, N_a, G, S) 並進行 446 個受控實驗，建立聯合 MoE scaling law，導出 G、S、N_a/N 的理論與實務最佳配置。
+- **用於文件的章節**：Scaling Law、設計指導、參數選擇
+- **與現有文件的差異**：提供具體數值指導，說明 optimal G、S 與稀疏比例隨模型規模變化，原文件僅概述機制。

@@ -30,16 +30,16 @@ Mixture‑of‑Experts (MoE) 透過 **稀疏門控 (sparse gating)** 只激活�
 ### 3. 部署考量
 | 項目 | 影響 | 常見解法 |
 |------|------|----------|
-| **Latency** | 閘門計算引入額外 O(1) 延遲，expert 並行可抵消 | 使用 **GPU kernel fusion**，預先編譯 expert 子圖
-| **記憶體** | 激活的 expert 需全參數載入；大量 expert 會導致 **模型碎片化** | 采用 **tensor‑parallel + expert‑parallel** 混合策略，僅在需要時載入
-| **成本** | 需要更多硬體節點才能支援上千 expert | 動態 **expert 輪換**，在低負載時關閉不活躍 expert
-| **穩定性** | Gate 失衡可能導致 *expert collapse*，產生性能下降 | 監控 **load‑balance 指標**，自動調整 capacity‑factor
+| **Latency** | 閘門計算引入額外 O(1) 延遲，expert 並行可抵消 | 使用 **GPU kernel fusion**，預先編譯 expert 子圖 |
+| **記憶體** | 激活的 expert 需全參數載入；大量 expert 會導致 **模型碎片化** | 采用 **tensor‑parallel + expert‑parallel** 混合策略，僅在需要時載入 |
+| **成本** | 需要更多硬體節點才能支援上千 expert | 動態 **expert 輪換**，在低負載時關閉不活躍 expert |
+| **穩定性** | Gate 失衡可能導致 *expert collapse*，產生性能下降 | 監控 **load‑balance 指標**，自動調整 capacity‑factor |
 
 ## 關鍵名詞與專案拆解
 | 名詞 / 專案 | 它解決什麼問題 | 核心機制 | 與相鄰技術差異 | 何時適合 / 不適合 |
 |-------------|----------------|----------|----------------|-------------------|
 | **Sparse MoE** | 大規模參數化而不提升 FLOPs | top‑k 閘門 + expert 前向 | 與 **Dense Transformer** 的線性成本形成對比 | 訓練成本高、需要大量 GPU，適合超大模型部署 |
-| **Switch Transformer** | 減少 expert 閘門計算開銷 | 只選擇 *單一* expert (k=1) | 較低的 load‑balance 複雜度 | 需要極致 latency 時 
+| **Switch Transformer** | 減少 expert 閘門計算開銷 | 只選擇 *單一* expert (k=1) | 較低的 load‑balance 複雜度 | 需要極致 latency 時 |
 | **GShard / GLaM** | 在 TP/PP 之上加入 expert parallelism | 分層分片 + MoE | 與單機 MoE 不同的跨機調度 | 多機叢集環境下的超大模型 |
 | **FastMoE** (Microsoft) | 高效 GPU 實作 | CUDA kernel 專化 | 相較於 **DeepSpeed MoE** 更低記憶體碎片 | 需要自研或微調大模型的團隊 |
 
@@ -96,12 +96,15 @@ python moe_example.py
 
 ## 2025‑2026 最新進展
 ### 1. Comprehensive MoE Scaling Law (Zhao et al., 2025)
-- 系統化描述 **資料量、總模型大小、激活模型大小、活躍 expert 數、共享比例** 五大因子對效能的邊際貢獻。
+- 系統化描述 **資料量、總模型大小、活躍模型大小、活躍 expert 數、共享比例** 五大因子對效能的邊際貢獻。
 - 提供 **閉式公式**，可在部署前預估所需的 expert 數量與 GPU 記憶體。
+
 ### 2. Adaptive Expert Router (ICLR 2026)
 - 使用 **Meta‑Learning** 讓 gate 在少量樣本上快速適應新任務，減少微調成本。
+
 ### 3. Hierarchical MoE (NeurIPS 2025)
 - 多層 MoE 結構，先在粗粒度 expert 篩選，再在細粒度 expert 中選取，顯著降低 routing 開銷。
+
 ### 4. MoE‑RAG (ACL 2025)
 - 結合 Retrieval‑Augmented Generation，將檢索結果作為 **expert 的額外條件**，提升知識密集任務的準確度。
 

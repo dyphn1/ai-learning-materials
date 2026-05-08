@@ -34,7 +34,7 @@ RAG 旨在破解 LLM 參數化知識的「凍結」問題，讓模型在推理�
 | 技術 | 優點 | 限制 | 典型應用 |
 |------|------|------|----------|
 | **Naive RAG** (single dense retrieval) | 簡單、易部署 | 只能單跳、答案易受檢索品質影響 | FAQ、產品說明書 |
-| **Hybrid HRAG** | 結合稀疏+稠密，提高長文本召回 | 需要兩套索引，維護成本上升 | 法律文件、科研論文 |
+| **Hybrid HRAG** | 結合稀疏+稠密，提高長文本召回率 | 需要兩套索引，維護成本上升 | 法律文件、科研論文 |
 | **Self‑RAG / HyDE** | 先生成假設性檔案再檢索，提升召回 | 生成階段可能引入噪聲 | 開放領域問答 |
 | **GraphRAG** | 多跳、跨模態、關係推理 | 圖構建與維護成本高 | 知識圖譜、跨文檔推理 |
 
@@ -49,6 +49,7 @@ RAG 旨在破解 LLM 參數化知識的「凍結」問題，讓模型在推理�
 | **TREC 2025 RAG Track** | 新基準測試多模態、長文檔檢索與生成效能 | [PDF Overview](https://trec.nist.gov/pubs/trec34/papers/Overview_rag.pdf) |
 
 ## 工程實作（完整可執行範例）
+
 ### 環境設定
 ```bash
 pip install chromadb sentence-transformers langchain openai
@@ -72,14 +73,7 @@ def retrieve(query, k=5):
 
 # 3. 生成 Prompt
 prompt = PromptTemplate(
-    template="""你是一名資深 AI 工程師，根據以下檢索結果回答問題。
-
-檢索結果:
-{retrieved}
-
-問題: {question}
-
-回答:""",
+    template="""你是一名資深 AI 工程師，根據以下檢索結果回答問題。\n\n檢索結果:\n{retrieved}\n\n問題: {question}\n\n回答:""",
     input_variables=["retrieved", "question"],
 )
 
@@ -100,20 +94,20 @@ python rag_example.py
 預期輸出應包含 HyDE 的核心概念，且引用的檢索片段與問題相關。
 
 ## 工程落地注意事項
-- **Latency**：檢索 + 生成雙重延遲。可使用 **async retrieval** 或 **cache top‑k** 降低 QPS 時間。\
-- **成本**：向量檢索雲服務 (Pinecone) 按查詢計費；預算緊張時考慮本地 **Chroma**。\
-- **穩定性**：混合檢索需同步更新稀疏索引，否則舊 BM25 權重導致失效。\
+- **Latency**：檢索 + 生成雙重延遲。可使用 **async retrieval** 或 **cache top‑k** 降低 QPS 時間。
+- **成本**：向量檢索雲服務 (Pinecone) 按查詢計費；預算緊張時考慮本地 **Chroma**。
+- **穩定性**：混合檢索需同步更新稀疏索引，否則舊 BM25 權重導致失效。
 - **Scaling**：分片（sharding）+ IVF‑PQ 可將向量庫拓展至億級規模。
 
 ## 已知限制與 Open Problems
-- **長文本獲取**：Chunk 失真仍是瓶頸。\
-- **動態知識更新**：向量庫同步延遲難以即時反映。\
-- **幻覺仍存**：即便檢索結果正確，LLM 仍可能自行捏造。\
+- **長文本獲取**：Chunk 失真仍是瓶頸。
+- **動態知識更新**：向量庫同步延遲難以即時反映。
+- **幻覺仍存**：即便檢索結果正確，LLM 仍可能自行捏造。
 - **跨模態檢索**：圖像、音頻的統一向量仍未成熟。
 
 ## 自我驗證練習
-1. 使用上面的範例，改變 `k` 參數觀察答案變化。\
-2. 替換檢索模型為 `text-embedding-ada-002`，比較相似度分數。\
+1. 使用上面的範例，改變 `k` 參數觀察答案變化。
+2. 替換檢索模型為 `text-embedding-ada-002`，比較相似度分數。
 3. 嘗試加入 GraphRAG 的圖構建步驟，觀察多跳推理效果。
 
 ## 延伸閱讀

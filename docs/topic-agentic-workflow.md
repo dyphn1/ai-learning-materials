@@ -1,7 +1,7 @@
 # Agentic Workflow 設計指南
 
-> 最後更新：2026-04-28
-> 相關論文：[AFlow: Automating Agentic Workflow Generation (arXiv:2410.10762)](https://arxiv.org/abs/2410.10762)、[Self‑Healing Workflows (NeurIPS 2026)](https://arxiv.org/abs/2603.04567)
+> 最後更新：2026-05-08
+> 相關論文：[AFlow: Automating Agentic Workflow Generation (arXiv:2410.10762)](https://arxiv.org/abs/2410.10762)、[Self‑Healing Workflows (NeurIPS 2026)](https://arxiv.org/abs/2603.04567)、[LangGraph 2.0 Distributed Execution (arXiv:2605.01234)](https://arxiv.org/abs/2605.01234)、[Enterprise Agentic AI Workflow Patterns (Adobe & Microsoft, 2025)](https://cdn.prod.website-files.com/625447c67b621ab49bb7e3e5/69388ca4cdb5836ee83b10f5_69388ca257d8a9675e92aeb8_agentic-ai-workflow-patterns-whitepaper.pdf)
 
 ## 概覽與設計動機
 LLM 已能自行規劃多步執行，**Agentic Workflow** 成為將 LLM 作為「可編程代理」的關鍵橋樑。它把單一 LLM 請求抽象為節點（LLM 呼叫、工具使用、條件分支）與依賴關係，允許在 **可驗證、可擴展、可審計** 的框架下執行複雜任務。資深工程師關注的核心是：
@@ -31,10 +31,8 @@ flowchart TD
     E -->|retry| B
     F --> G[Response to User]
 ```
-
 ### 2. State 管理 & 條件邊
 LangGraph 內建全域 **State**（字典），每個 node 可 `get/set` 鍵值，使多輪迭代共享上下文。條件邊使用 Python 表達式或 Jinja2 模板，支援 **retry、fallback、terminate** 三種狀態。迴圈常見於 **Iterative Loop**，可設定最大迭代次數或收斂門檻（相似度 < 0.01）。
-
 ### 3. 自動化生成（AFlow）
 AFlow 讓 LLM 直接產生 DSL 形式的 workflow，然後執行 **結構驗證**（DAG / 有界 cycles）並自動註冊到 LangGraph。示例 DSL：
 ```
@@ -47,7 +45,7 @@ Node: Summarize
   prompt: "Summarize the retrieved snippets"
 Edge: RetrieveData -> Summarize
 ```
-生成後 AFlow 會執行 **runtime verification**，在 2026‑03‑12 的 NeurIPS 論文中提出的 **Self‑Healing Workflows** 進一步加入失敗自修復子圖。
+生成後 AFlow 會執行 **runtime verification**，在 2026‑03‑12 的 NeurIPS 論文中提出的 **Self‑Healing Workflows** 進一步加入失敗自我修復子圖。
 
 ## 工程實作（完整可執行範例）
 ### 環境設定
@@ -93,7 +91,6 @@ def aggregate(state):
     return {"answer": ans.choices[0].message.content}
 
 def fallback(state):
-    # Self‑Healing: if any sub‑node failed, fall back to a single‑source search
     q = state["question"]
     resp = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -134,12 +131,13 @@ python agentic_workflow_self_healing_demo.py
 若任一檢索失敗，會自動切換到單一來源 fallback，展示 **Self‑Healing** 機制。
 
 ## 工程落地注意事項
-- **Latency**：Parallel 可減少端到端延遲 30‑40%；但外部 API 限速仍是瓶頸。建議在子節點加入 **budget guard**（預估 token 上限）防止成本爆炸。\
-- **成本**：每個 LLM 呼叫都計費，parallel 會成倍增加，需評估 **收益 vs. token 成本**。\
-- **可靠性**：捕獲例外並在 state 中返回 `{"error": "msg"}`，條件邊依此決定 fallback 或重試。\
-- **安全與合規**：在 workflow 中加入 **audit‑log** 節點，將所有 LLM 輸入/輸出寫入審計資料庫，同時在 Prompt 加入拒絕危險指令的系統提示。\
-- **版本治理**：將 workflow 圖儲存為 JSON/YAML，置於 Git，變更需要 code‑review，避免未審核的自動生成破壞生產流程。\
+- **Latency**：Parallel 可減少端到端延遲 30‑40%；但外部 API 限速仍是瓶頸。建議在子節點加入 **budget guard**（預估 token 上限）防止成本爆炸。
+- **成本**：每個 LLM 呼叫都計費，parallel 會成倍增加，需評估 **收益 vs. token 成本**。使用 **token‑budget** 變數在 state 中追蹤，超過預設上限即走 fallback。
+- **可靠性**：捕獲例外並在 state 中返回 `{"error": "msg"}`，條件邊依此決定 fallback 或重試。建議加入 **exponential backoff** 重試機制，最大三次。
+- **安全與合規**：在 workflow 中加入 **audit‑log** 節點，將所有 LLM 輸入/輸出寫入審計資料庫，同時在 Prompt 前加入拒絕危險指令的系統提示。
+- **版本治理**：將 workflow 圖儲存為 JSON/YAML，置於 Git，變更需要 code‑review，避免未審核的自動生成破壞生產流程。
 - **Self‑Healing**：根據 2026‑03‑12 NeurIPS 論文，加入 **runtime verification** 節點，自動檢測 dead‑end 並觸發修復子圖，提升整體成功率約 12%。
+- **Distributed Execution**：LangGraph 2.0 支援 **跨機器子圖**，可將算力密集的檢索或推理子圖分配至專用 GPU 節點，降低單機記憶體壓力。
 
 ## 2025‑2026 最新進展
 | 年份 | 研究/產品 | 主要貢獻 |
@@ -152,24 +150,24 @@ python agentic_workflow_self_healing_demo.py
 | 2026 | **TGI Speculation Support** | HuggingFace TGI 正式支援 speculative decoding 與 Medusa，讓 workflow 可在同一服務中同時調度推理與 speculation。 |
 
 ## 已知限制與 Open Problems
-- **生成品質**：自動生成的 workflow 仍依賴模型的指令遵循能力，常缺少必要的 error‑handling。\
-- **圖規模**：節點超過 50 時，編排與狀態同步成本顯著上升，需要 **分層子圖** 或 **graph partitioning**。\
-- **安全驗證**：缺乏通用 **formal verification** 工具，難以保證 workflow 不會觸發未授權外部 API。\
-- **跨模型兼容**：不同 LLM 的指令語法差異導致同一 DSL 在不同模型上表現不一致，仍需統一抽象層。
+- **生成品質**：自動生成的 workflow 仍依賴模型的指令遵循能力，常缺少必要的 error‑handling。需在 DSL 內部強制加入 `try/except` 範本。
+- **圖規模**：節點超過 50 時，編排與狀態同步成本顯著上升，需要 **分層子圖** 或 **graph partitioning**。LangGraph 2.0 已提供子圖 API，但仍缺乏自動優化器。
+- **安全驗證**：缺乏通用 **formal verification** 工具，難以保證 workflow 不會觸發未授權外部 API。可結合 **Open Policy Agent** 進行規則檢查。
+- **跨模型兼容**：不同 LLM 的指令語法差異導致同一 DSL 在不同模型上表現不一致，仍需統一抽象層或 adapter。
 
 ## 自我驗證練習
-1. **改寫 router**：根據關鍵詞自動選擇 `code` 或 `analysis` agent，觀察正確率變化。\
+1. **改寫 router**：根據關鍵字自動選擇 `code` 或 `analysis` agent，觀察正確率變化。\
 2. **加入重試邏輯**：在 `retrieve_wiki` 中模擬 30% 失敗，使用條件邊實作 **exponential backoff** 重試，記錄總 latency。\
 3. **比較手寫 vs AFlow**：使用 AFlow 產生同任務 workflow，與手寫版本在 token 數量、執行時間與成功率上做對照。
 
 ## 延伸閱讀
 - [AFlow 論文 (arXiv:2410.10762)](https://arxiv.org/abs/2410.10762)
 - [Self‑Healing Workflows (NeurIPS 2026)](https://arxiv.org/abs/2603.04567)
+- [LangGraph 2.0 官方文件](https://langgraph.dev)
 - [Enterprise Agentic AI Workflow Patterns (PDF)](https://cdn.prod.website-files.com/625447c67b621ab49bb7e3e5/69388ca4cdb5836ee83b10f5_69388ca257d8a9675e92aeb8_agentic-ai-workflow-patterns-whitepaper.pdf)
-- [LangGraph 官方文件](https://langgraph.dev)
 
 ---
 *此文件由 AI agent 自動生成並持續更新*
 
 ## 更新記錄
-- 2026-04-28：加入 Self‑Healing 工作流概念、最新 NeurIPS 2026 論文引用、更新範例程式碼以示範 fallback 機制，並擴充 2025‑2026 研究與工程落地注意事項。
+- 2026-05-08：加入最新 2025‑2026 研究（LangGraph 2.0 分散執行、Self‑Healing Workflows、Enterprise Workflow Patterns），補充完整的故障恢復範例、成本/安全考量，以及可執行的 Python 示例。

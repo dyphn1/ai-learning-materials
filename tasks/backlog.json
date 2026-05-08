@@ -1,0 +1,45 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "description": "OpenClaw Agentic Workflow — 任務總表",
+    "scopes": ["ai-learning", "openclaw-learning", "openclaw-analysis"],
+    "task_lifecycle": ["Pending", "Researching", "Research_Done", "Writing", "Completed", "Archived", "Failed"]
+  },
+  "backlog": [
+    {
+      "task_id": "AL-20260509-001",
+      "scope": "ai-learning",
+      "subject": "Agentic_RAG_2026_Update",
+      "priority": "High",
+      "target_doc": "/Users/daniel.chang/Desktop/ai/docs/topic-agentic-rag.md",
+      "reason": "此文件尚無 2026 年最新研究，需補充 Self-RAG、Adaptive RAG 等進展",
+      "status": "Pending"
+    },
+    {
+      "task_id": "OL-20260509-001",
+      "scope": "openclaw-learning",
+      "subject": "Cron_Timezone_Logic",
+      "priority": "High",
+      "source_files": [
+        "src/cron/manager.ts",
+        "src/utils/tz.ts"
+      ],
+      "target_doc": "/Users/daniel.chang/Desktop/ai/learning_materials/openclaw/05-agentic-cron.md",
+      "reason": "時區處理邏輯是高頻問題，需要深度分析不同 OS 的表現差異",
+      "status": "Pending"
+    },
+    {
+      "task_id": "OA-20260509-001",
+      "scope": "openclaw-analysis",
+      "subject": "Plugin_SDK_Architecture",
+      "priority": "Medium",
+      "source_files": [
+        "src/plugin-sdk/",
+        "src/plugins/"
+      ],
+      "target_doc": "/Users/daniel.chang/Desktop/ai/learning_materials/openclaw/plugin-sdk-architecture.md",
+      "reason": "Plugin SDK 架構文件缺失，第三方開發者需要清晰的設計說明",
+      "status": "Pending"
+    }
+  ]
+}
