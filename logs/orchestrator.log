@@ -1,0 +1,3 @@
+[2026-05-09T00:00:00+08:00] Dispatched: AL-20260509-PE-DEEP (Level2_Prompt_Engineering_Deep_Reinforcement) — Priority: High — Reason: 使用者指定從 deep-level2-prompt-engineering.md 進行深度補強；doc 雖於 2026-04-29 更新，但驗收清單項目未被勾選，程式碼範例使用已棄用的舊版 openai API，且缺少 Prompt Injection 防禦章節與 DSPy 可執行示例，需 Fact-Check Scout 驗證引用正確性並補充研究後更新。
+[2026-05-09T00:00:00+08:00] REJECTED: AL-20260509-PE-DEEP — Failed checks: Hallucination, Evidence_Annotation. Returned to Instructional Writer. Review note: /tasks/context/AL-20260509-PE-DEEP-review.md
+[2026-05-09T00:00:00+08:00] ARCHIVED: AL-20260509-PE-DEEP — Document passed all 6 checks

@@ -56,11 +56,13 @@ Before entering the workflow, read the following states:
 
 1. **AGENT FIRST**: Every step must invoke the corresponding agent via `runSubagent`. Do not perform the agent's work yourself.
 2. **ONE AT A TIME**: Only invoke one agent at a time; wait for its Handover Block before invoking the next.
-3. **NO INTERRUPTIONS**: Upon receiving a Handover Block, immediately proceed to the next step without asking the user (except after Orchestrator completes).
-4. **FORCED CONFIRMATION**: Only after the Orchestrator outputs its Handover Block, ask:
-   > "The Orchestrator has created the task cards. Shall we begin the research and writing process?"
-   > Options: ["Yes, launch Fact-Check Scout now", "No, let me review the task cards first"]
-5. **RESILIENT LOOP**: Quality Validator rejections allow at most **3 retries**. If the same task is rejected more than 3 times, mark it as `"Failed"` and notify the user.
+3. **NO INTERRUPTIONS**: Upon receiving a `### 🤝 Handover Block`, immediately invoke the next agent in the state transition table without pausing.
+4. **FORCED CONFIRMATION (manual trigger only)**: After the Orchestrator outputs its Handover Block during a **user-initiated** invocation, ask once:
+   > "Orchestrator 已建立任務卡。是否繼續啟動 Fact-Check Scout 開始研究？"
+   > Options: `["Yes, launch Fact-Check Scout now", "No, let me review the task cards first"]`  
+   During **cron / systemEvent** triggers, skip this entirely and proceed immediately to Fact-Check Scout.
+5. **RE-DISPATCH HANDLING**: When Quality Validator outputs a `### 🔁 Re-dispatch Request Block`, extract `Fix Instructions` and immediately invoke **Instructional Writer** with the review note path (`/tasks/context/<task_id>-review.md`) and the fix context. After the Writer completes, re-invoke Quality Validator.
+6. **RESILIENT LOOP**: Quality Validator rejections allow at most **3 retries** per task. If exceeded, mark the task as `"Failed"` and notify the user.
 
 ## Project-Specific Notes
 
