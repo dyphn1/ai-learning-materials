@@ -13,7 +13,7 @@
       "priority": "High",
       "target_doc": "/Users/daniel.chang/Desktop/ai/docs/topic-agentic-rag.md",
       "reason": "此文件尚無 2026 年最新研究，需補充 Self-RAG、Adaptive RAG 等進展",
-      "status": "Pending"
+      "status": "Active"
     },
     {
       "task_id": "OL-20260509-001",
@@ -26,8 +26,7 @@
       ],
       "target_doc": "/Users/daniel.chang/Desktop/ai/learning_materials/openclaw/05-agentic-cron.md",
       "reason": "時區處理邏輯是高頻問題，需要深度分析不同 OS 的表現差異",
-      "status": "Pending"
-    },
+      "status": "Active",
     {
       "task_id": "OA-20260509-001",
       "scope": "openclaw-analysis",

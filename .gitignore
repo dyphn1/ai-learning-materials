@@ -1,1 +1,9 @@
 .DS_Store
+__pycache__/
+*.pyc
+
+# Runtime output. Keep README files, but do not commit generated runs/logs.
+logs/*.log
+logs/agentic-pipeline-runs/
+daily-updates/*.md
+tasks/.agentic_pipeline.lock

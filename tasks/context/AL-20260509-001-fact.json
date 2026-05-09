@@ -1,0 +1,25 @@
+{
+  "task_id": "AL-20260509-001",
+  "subject": "Agentic_RAG_2026_Update",
+  "scope": "ai-learning",
+  "researched_at": "2026-05-09T13:57:30+00:00",
+  "status": "Research_Done",
+  "verified_options": [],
+  "logic_flow": [
+    "Entry: LLM receives query and triggers Agentic RAG pipeline",
+    "Agent reflects on query, plans retrieval strategy",
+    "Agent uses tools to retrieve relevant documents",
+    "Agent iteratively refines context and may invoke additional agents",
+    "Final generation step produces answer based on refined context"
+  ],
+  "key_formulas": [],
+  "test_evidence": [],
+  "external_references": [
+    {
+      "title": "Agentic Retrieval-Augmented Generation: A Survey on Agentic RAG",
+      "url": "https://arxiv.org/abs/2501.09136",
+      "type": "paper"
+    }
+  ],
+  "warnings": []
+}

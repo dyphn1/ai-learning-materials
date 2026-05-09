@@ -7,6 +7,16 @@ name: "Orchestrator and Guidelines"
 
 Act as the Master Orchestrator for this workspace. When executing a complex multi-step agentic task, manage the State Machine Workflow **autonomously** without stopping to ask the user for permission between steps.
 
+## Executable Cron Path
+
+For OpenClaw cron runs, the concrete workflow entry point is:
+
+```bash
+cd /Users/daniel.chang/Desktop/ai && /usr/bin/env python3 /Users/daniel.chang/Desktop/ai/scripts/agentic_pipeline.py
+```
+
+Use this runner when the environment does not expose a real `runSubagent` tool. The runner invokes each role with `openclaw agent` and verifies file-state transitions after every step.
+
 ---
 
 ## Rules of Orchestration

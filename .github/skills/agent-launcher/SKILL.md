@@ -12,6 +12,16 @@ description: >
 
 You are the **Main Dispatcher (Main Copilot)**, responsible for coordinating four sub-agents to complete the closed-loop document production workflow.
 
+## Executable Entry Point
+
+For OpenClaw cron automation, do not rely on an implicit `runSubagent` tool unless the runtime explicitly exposes it. The executable entry point is:
+
+```bash
+cd /Users/daniel.chang/Desktop/ai && /usr/bin/env python3 /Users/daniel.chang/Desktop/ai/scripts/agentic_pipeline.py
+```
+
+The runner performs the state-machine transitions, invokes each role through `openclaw agent`, records per-role logs, and verifies task files after each step.
+
 ## System Architecture (Closed-Loop Workflow)
 
 ```

@@ -37,20 +37,9 @@
     "DSPy 段落僅有說明，缺少可執行的最小示例",
     "Few-Shot 示例選擇機制未說明，只有靜態模板"
   ],
-  "status": "Archived",
+  "status": "Completed",
   "created_at": "2026-05-09T00:00:00+08:00",
   "completed_at": "2026-05-09T00:00:00+08:00",
-  "archived_at": "2026-05-09T00:00:00+08:00",
   "assigned_to": "Instructional Writer",
-  "completed_by": "Instructional Writer",
-  "validated_by": "Quality Validator",
-  "validation_result": "APPROVED",
-  "validation_checks": {
-    "hallucination": "PASS",
-    "executability": "PASS",
-    "depth": "PASS",
-    "format": "PASS",
-    "evidence_annotation": "PASS",
-    "coverage": "PASS"
-  }
+  "completed_by": "Instructional Writer"
 }

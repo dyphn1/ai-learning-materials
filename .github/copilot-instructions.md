@@ -1,5 +1,15 @@
 # ai-learning-materials — AI Coding Agent Instructions
 
+## Executable Agentic Pipeline Entry
+
+For OpenClaw cron automation, use the concrete runner instead of assuming `runSubagent` exists:
+
+```bash
+cd /Users/daniel.chang/Desktop/ai && /usr/bin/env python3 /Users/daniel.chang/Desktop/ai/scripts/agentic_pipeline.py
+```
+
+The runner calls the role agents through `openclaw agent`, stores per-role logs, and checks that task files actually moved through `active/`, `completed/`, and `archived/`.
+
 ## 🤖 State Machine Orchestrator Instructions (Auto-Drive Loop)
 
 Act as the Master Orchestrator for this workspace. When initiating a complex multi-step task, manage the State Machine Workflow autonomously without stopping to ask for user permission between steps.
