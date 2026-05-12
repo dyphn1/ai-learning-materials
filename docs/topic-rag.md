@@ -21,6 +21,16 @@ RAG 旨在破解 LLM 參數化知識的「凍結」問題，讓模型在推理�
 - 混合檢索分數： $$s = \lambda\,\text{sim}_{dense} + (1-\lambda)\,\text{BM25}\quad (0\le\lambda\le1)$$\
 - 檢索‑生成協同目標： $$\max_{\theta}\; \mathbb{E}_{(q,c)}\big[\log P_{\theta}(a|q,\text{retrieval}(q,c))\big]$$
 
+## Sub-topic Deep Dives
+
+| 文件 | 主題 | 特徵 |
+|------|------|------|
+| [Self-RAG](rag/self-rag.md) | 閉環自迭代檢索 | Reflection Token, Critique Loop |
+| [CRAG](rag/crag.md) | 修正式 RAG + Web 回退 | Retrieval Evaluator, Dynamic Fallback |
+| [GraphRAG](rag/graph-rag.md) | 圖結構多跳檢索 | Knowledge Graph, Community Detection |
+| [HyDE](rag/hyde.md) | 假設文件嵌入 | Query-to-Document Bridge, Zero-shot |
+| [Adaptive RAG](rag/adaptive-rag.md) | 複雜度感知路由 | Complexity Classifier, 3-Strategy Routing |
+
 ## 關鍵名詞與專案拆解
 | 名詞 / 專案 | 解決什麼問題 | 核心機制 | 與相鄰技術差異 | 何時適合 / 不適合 |
 |-------------|--------------|----------|----------------|-------------------|
@@ -31,12 +41,15 @@ RAG 旨在破解 LLM 參數化知識的「凍結」問題，讓模型在推理�
 | **RAGAS** | 評估 RAG 系統 factuality、relevance | 多指標基準套件 | vs. Human eval | 部署前自動化測試必備 |
 
 ## 與前代技術的比較
-| 技術 | 優點 | 限制 | 典型應用 |
-|------|------|------|----------|
-| **Naive RAG** (single dense retrieval) | 簡單、易部署 | 只能單跳、答案易受檢索品質影響 | FAQ、產品說明書 |
-| **Hybrid HRAG** | 結合稀疏+稠密，提高長文本召回率 | 需要兩套索引，維護成本上升 | 法律文件、科研論文 |
-| **Self‑RAG / HyDE** | 先生成假設性檔案再檢索，提升召回 | 生成階段可能引入噪聲 | 開放領域問答 |
-| **GraphRAG** | 多跳、跨模態、關係推理 | 圖構建與維護成本高 | 知識圖譜、跨文檔推理 |
+| 方法 | 檢索策略 | 修正機制 | 複雜度 | 最佳使用情境 | 深度文件 |
+|------|---------|---------|--------|------------|----------|
+| **Naive RAG** | 單次稠密檢索 | 無 | 低 | FAQ、靜態知識庫 | — |
+| **Hybrid HRAG** | 稠密 + BM25 混合 | 無 | 低~中 | 多語言、長文本語料 | — |
+| **Self-RAG** | LLM 自決迭代檢索 | Critique tokens (IsREL / IsSUP / IsUSE) | 中 | 開放域 QA、需要 citation | [self-rag.md](rag/self-rag.md) |
+| **CRAG** | 稠密 + Web Search 回退 | Retrieval Evaluator 修正 | 中 | 動態/時效性知識庫 | [crag.md](rag/crag.md) |
+| **GraphRAG** | 圖遍歷 + 社群摘要 | 結構化重排 | 高 | 多跳推理、知識圖譜 | [graph-rag.md](rag/graph-rag.md) |
+| **HyDE** | 假設文件橋接稠密檢索 | 無（前置強化） | 低~中 | 稀有主題、零樣本檢索 | [hyde.md](rag/hyde.md) |
+| **Adaptive RAG** | 複雜度分類路由 (A/B/C) | 自適應（依複雜度選策略） | 中 | 混合難度查詢工作負載 | [adaptive-rag.md](rag/adaptive-rag.md) |
 
 ## 2025‑2026 最新進展
 | 方法 | 核心創新 | 來源 |
@@ -111,7 +124,7 @@ python rag_example.py
 3. 嘗試加入 GraphRAG 的圖構建步驟，觀察多跳推理效果。
 
 ## 延伸閱讀
-- [來源清單](../docs/references/topic-rag-ref.md)
+- [來源清單](../references/topic-rag-ref.md)
 
 ---
 *此文件由 AI agent 自動生成並持續更新*

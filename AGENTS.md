@@ -212,3 +212,48 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 ## Make It Yours
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.
+
+---
+
+## Workspace Structure
+
+```text
+/Users/daniel.chang/Desktop/ai/
+├── docs/               # AI knowledge base
+│   ├── openclaw/       # OpenClaw 學習文件（01–07 + cron + plugin）
+│   ├── rag/            # RAG 子主題深度文件
+│   └── AI_Glossary.md  # AI 術語詞典
+├── references/         # 論文、PDF、引用連結
+├── logs/               # 執行紀錄
+│   ├── pipeline.log    # pipeline 層級事件
+│   ├── summary.log     # 每次執行摘要
+│   ├── runs/           # 每個 agent turn 的原始輸出
+│   └── agents/         # 每個 agent 的累計行動紀錄
+├── tasks/              # agentic workflow 狀態機
+│   ├── active/         # 進行中任務 (.json)
+│   ├── completed/      # 已完成任務 (.json)
+│   ├── archived/       # 已歸檔任務 (.json)
+│   ├── context/        # fact sheets + review notes
+│   ├── specs/          # 需求規格與 deep task 模板
+│   └── {timestamp}_{slug}.md  # 人類可讀任務紀錄
+├── scripts/            # agentic_pipeline.py（主入口）+ gen_*.py 工具
+├── weekly-challenges/  # 每週一個主題的學習挑戰
+└── workflow/           # cron / workflow 設定文件
+```
+
+## Pipeline Quick Reference
+
+**執行 pipeline：**
+```bash
+cd /Users/daniel.chang/Desktop/ai && python3 scripts/agentic_pipeline.py
+```
+
+**任務檔案格式（人類可讀）：**
+```
+tasks/{YYYYMMDDTHHMMSS+0800}_{topic-slug}.md
+```
+Frontmatter 欄位：`task_id`, `scope`, `subject`, `priority`, `target_doc`, `status`, `created_at`, `completed_at`  
+檔案內的 Status History 表格記錄每個 agent 的行動。
+
+**Agent 角色：** `orchestrator`, `fact-check-scout`, `instructional-writer`, `quality-validator`  
+**Per-agent 行動紀錄：** `logs/agents/{role}.log`

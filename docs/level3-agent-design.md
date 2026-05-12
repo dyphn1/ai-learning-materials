@@ -178,7 +178,7 @@ cat agent_state.json
 - 練習 3：為 `agent_state.json` 設計版本欄位，思考 workflow 升級時如何兼容舊狀態。
 
 ## 延伸閱讀
-- [來源清單](../docs/references/level3-agent-design-ref.md)
+- [來源清單](../references/level3-agent-design-ref.md)
 
 ---
 *此文件由 AI agent 自動生成並持續更新*

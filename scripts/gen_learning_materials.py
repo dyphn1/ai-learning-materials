@@ -10,7 +10,7 @@ import datetime
 from pathlib import Path
 
 DOCS_DIR = Path("/Users/daniel.chang/Desktop/ai/docs")
-MATERIALS_DIR = Path("/Users/daniel.chang/Desktop/ai/learning_materials")
+MATERIALS_DIR = Path("/Users/daniel.chang/Desktop/ai/docs")
 GLOSSARY_FILE = MATERIALS_DIR / "AI_Glossary.md"
 GLOSSARY_STOP_TERMS = {
     "優點", "缺點", "問題", "內容", "中等", "建議", "建議起點", "建議優先下載",
@@ -388,18 +388,19 @@ def generate_learning_materials():
     processed.sort(key=lambda x: x['file'])
 
     # Generate individual study notes
-    for p in processed:
-        content = build_study_notes(p)
-        
-        # Create safe filename
-        safe_name = p['file'].replace('.md', '_study_notes.md')
-        out_path = MATERIALS_DIR / safe_name
-        try:
-            with open(out_path, 'w', encoding='utf-8') as f:
-                f.write(content)
-            print(f"Generated study notes: {out_path}")
-        except Exception as e:
-            print(f"Error writing study notes for {p['file']}: {e}")
+    # NOTE: study_notes files are no longer generated as standalone files.
+    # Study notes are now appended directly to the main docs in docs/.
+    # The code below is retained for reference but commented out.
+    # for p in processed:
+    #     content = build_study_notes(p)
+    #     safe_name = p['file'].replace('.md', '_study_notes.md')
+    #     out_path = MATERIALS_DIR / safe_name
+    #     try:
+    #         with open(out_path, 'w', encoding='utf-8') as f:
+    #             f.write(content)
+    #         print(f"Generated study notes: {out_path}")
+    #     except Exception as e:
+    #         print(f"Error writing study notes for {p['file']}: {e}")
 
     # Generate glossary
     glossary_lines = []

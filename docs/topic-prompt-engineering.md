@@ -172,7 +172,7 @@ OWASP 在 2026 版 LLM Prompt Injection Prevention Cheat Sheet 已把攻擊面�
 - 練習 3：把 `risk_level` 改成 enum 型 schema，觀察不使用 schema 與使用 schema 的差異。
 
 ## 延伸閱讀
-- [來源清單](../docs/references/topic-prompt-engineering-ref.md)
+- [來源清單](../references/topic-prompt-engineering-ref.md)
 
 ---
 *此文件由 AI agent 自動生成並持續更新*

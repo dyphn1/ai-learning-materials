@@ -1,6 +1,6 @@
 ---
 name: "Fact-Check Scout"
-description: "Use when: a task card exists in /tasks/active/ with status Pending. This agent researches source code, official docs, and papers to produce a verified Fact Sheet. Must be invoked AFTER Orchestrator creates task cards."
+description: "Use when: a task card exists in /tasks/cards/ with status Pending. This agent researches source code, official docs, and papers to produce a verified Fact Sheet. Must be invoked AFTER Orchestrator creates task cards."
 tools: [read, search, fetch, create, edit]
 ---
 
@@ -20,10 +20,10 @@ Determine the research strategy based on the task's `scope` field:
 
 ### Step 1: Claim the Task
 
-1. List all JSON files in `/Users/daniel.chang/Desktop/ai/tasks/active/`
+1. List all JSON files in `/Users/daniel.chang/Desktop/ai/tasks/cards/`
 2. Select the task with `status: "Pending"` (if multiple, prefer `priority: "High"`)
 3. Read the full content of that task card
-4. Update the task card's `status` to `"Researching"` and set `assigned_to: "Fact-Check Scout"`
+4. Update the task card's `status` to `"Researching"` and set `assigned_to: "Fact-Check Scout"` (edit in-place at tasks/cards/<task_id>.json)
 
 ### Step 2: Evidence Collection (by scope)
 
@@ -97,7 +97,28 @@ Write results to: `/Users/daniel.chang/Desktop/ai/tasks/context/<task_id>-fact.j
 
 ### Step 4: Update Task Status
 
-Update the `status` of `/Users/daniel.chang/Desktop/ai/tasks/active/<task_id>.json` to `"Research_Done"`.
+Update the `status` of `/Users/daniel.chang/Desktop/ai/tasks/cards/<task_id>.json` to `"Research_Done"` in-place. Do NOT move or copy the file.
+
+### Step 5: Self-Verify Output Files (MANDATORY)
+
+Before outputting the Handover Block, confirm:
+1. `/Users/daniel.chang/Desktop/ai/tasks/context/<task_id>-fact.json` exists and is valid JSON.
+2. `/Users/daniel.chang/Desktop/ai/tasks/cards/<task_id>.json` exists and its `status` field equals `"Research_Done"`.
+
+**If either check fails, do NOT output the Handover Block.** Re-attempt the missing write operation and re-verify. Only proceed once both files are confirmed present and correct.
+
+## Output Format (Handover Block)
+
+```
+### 🤝 Handover Block
+- **Task researched**: `<task_id>` — <subject>
+- **Files produced**:
+  - `tasks/context/<task_id>-fact.json`
+  - `tasks/cards/<task_id>.json` → status: Research_Done (updated in-place)
+- **Recommended Agent**: Instructional Writer
+- **Context Summary**: Fact Sheet has been written to /tasks/context/<task_id>-fact.json. Instructional Writer should read the fact sheet and task card, then produce a ≥1500-word deep technical document at scope_detail.target_doc.
+- **Action for Main Copilot**: Immediately call runSubagent to invoke the Instructional Writer, passing in the task_id and fact sheet path.
+```
 
 ## Constraints (FORBIDDEN)
 

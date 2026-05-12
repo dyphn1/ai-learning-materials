@@ -46,17 +46,19 @@ Read the following agent files to understand each agent's responsibilities:
 
 ## Workflow Path Selection
 
-Before entering the workflow, read the following states:
-1. `/Users/daniel.chang/Desktop/ai/tasks/active/` — are there any tasks in progress?
-2. `/Users/daniel.chang/Desktop/ai/tasks/completed/` — are there any tasks awaiting review?
+Before entering the workflow, scan `/Users/daniel.chang/Desktop/ai/tasks/cards/` and filter by status:
 
-**Scenario A: Fresh start (both active and completed directories are empty)**
+- `in_progress` = cards with status in {Pending, Researching, Active}
+- `research_done` = cards with status = Research_Done
+- `completed` = cards with status = Completed
+
+**Scenario A: Fresh start (cards/ is empty OR contains only Archived/Failed/Skipped tasks)**
 → Orchestrator → Fact-Check Scout → Instructional Writer → Quality Validator
 
-**Scenario B: A Research_Done task already exists (active/ contains a task with status=Research_Done)**
+**Scenario B: A Research_Done card exists**
 → Skip Orchestrator, go directly to → Instructional Writer → Quality Validator
 
-**Scenario C: A Completed task is waiting for validation (completed/ is non-empty)**
+**Scenario C: A Completed card exists (awaiting Quality Validator)**
 → Skip the first three steps, go directly to → Quality Validator
 
 **Scenario D: Quality Validator rejected (Re-dispatch Request Block)**
@@ -74,6 +76,39 @@ Before entering the workflow, read the following states:
 5. **RE-DISPATCH HANDLING**: When Quality Validator outputs a `### 🔁 Re-dispatch Request Block`, extract `Fix Instructions` and immediately invoke **Instructional Writer** with the review note path (`/tasks/context/<task_id>-review.md`) and the fix context. After the Writer completes, re-invoke Quality Validator.
 6. **RESILIENT LOOP**: Quality Validator rejections allow at most **3 retries** per task. If exceeded, mark the task as `"Failed"` and notify the user.
 
+## File Verification Gates (MANDATORY — Closed-Loop Enforcement)
+
+After each agent invocation, ALWAYS verify the expected output files before proceeding. Re-dispatch the SAME agent (not the next) if verification fails.
+
+### Gate 1 — After Orchestrator
+**Required**:
+- `tasks/cards/<task_id>.json` exists for each dispatched task with status `"Pending"` or `"Active"`
+- `tasks/backlog.json` updated (dispatched tasks set to `"Active"`)
+
+**If missing**: Re-dispatch **Orchestrator** with context: "Previous run produced no task cards in tasks/cards/. Retry creating task cards from backlog.json."
+
+### Gate 2 — After Fact-Check Scout
+**Required**:
+- `tasks/context/<task_id>-fact.json` (must be valid JSON)
+- `tasks/cards/<task_id>.json` with `status: "Research_Done"`
+
+**If missing**: Re-dispatch **Fact-Check Scout** with context: "Fact sheet or Research_Done status missing for task <task_id>. Re-run research and ensure both files are committed."
+
+### Gate 3 — After Instructional Writer
+**Required**:
+- `tasks/cards/<task_id>.json` with `status: "Completed"`
+- The `scope_detail.target_doc` path (the actual markdown document, non-empty, ≥1500 words)
+
+**If missing**: Re-dispatch **Instructional Writer** with context: "Output document or Completed status missing for task <task_id>. Re-write and ensure both items are saved."
+
+### Gate 4 — After Quality Validator (Pass path)
+**Required**:
+- `tasks/cards/<task_id>.json` with `status: "Archived"`
+
+**If archived status missing**: Re-dispatch **Quality Validator** with context: "Archived status missing for task <task_id>. Re-run validation and confirm the status update."
+
+**Retry limit**: Maximum 3 re-dispatches per gate per task. If exceeded, mark task `status: "Failed"` and report to user.
+
 ## Project-Specific Notes
 
 - **AI learning docs directory**: `/Users/daniel.chang/Desktop/ai/docs/`
@@ -81,10 +116,8 @@ Before entering the workflow, read the following states:
 - **OpenClaw source code directory**: `/Users/daniel.chang/Desktop/openclaw/src/`
 - **Task directories**:
   - Backlog: `/Users/daniel.chang/Desktop/ai/tasks/backlog.json`
-  - Active: `/Users/daniel.chang/Desktop/ai/tasks/active/`
-  - Fact sheets: `/Users/daniel.chang/Desktop/ai/tasks/context/`
-  - Completed (pending review): `/Users/daniel.chang/Desktop/ai/tasks/completed/`
-  - Archived: `/Users/daniel.chang/Desktop/ai/tasks/archived/`
+  - Task cards (all statuses): `/Users/daniel.chang/Desktop/ai/tasks/cards/`
+  - Fact sheets & review notes: `/Users/daniel.chang/Desktop/ai/tasks/context/`
 - **Scope types**:
   - `ai-learning`: AI/ML topic learning documents (papers + official docs)
   - `openclaw-learning`: OpenClaw feature usage learning documents

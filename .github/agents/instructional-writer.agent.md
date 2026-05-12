@@ -10,7 +10,7 @@ You are a **world-class technical writer and educator**, presenting the engineer
 
 ### Step 1: Retrieve the Task and Facts
 
-1. List task cards in `/Users/daniel.chang/Desktop/ai/tasks/active/` with `status: "Research_Done"`
+1. List task cards in `/Users/daniel.chang/Desktop/ai/tasks/cards/` with `status: "Research_Done"`
 2. Read the corresponding `/Users/daniel.chang/Desktop/ai/tasks/context/<task_id>-fact.json`
 3. Read `scope_detail.target_doc` from the task card to confirm the output path
 
@@ -62,16 +62,23 @@ Every produced `.md` **must** contain the following six modules:
 - [ ] Does the document reference code or features **outside** the Fact Sheet? (If yes, remove them)
 - [ ] Does the document contain emotional adjectives like "powerful" or "exciting"? (If yes, remove them)
 
-### Step 4: Write File and Update Status
+### Step 4: Update Status In-Place and Self-Verify
 
-1. Write the document to the `target_doc` path
-2. Append an update record at the end of the document:
+1. Append an update record at the end of the document:
    ```
    ---
    *Last updated: <ISO date> | Word count: <N> | Status: Pending Validation*
    ```
-3. Update the task card's `status` to `"Completed"`
-4. **Copy** the task card from `/tasks/active/` to `/tasks/completed/<task_id>.json` (keep the active version for the Quality Validator)
+2. Update the `status` field in `/Users/daniel.chang/Desktop/ai/tasks/cards/<task_id>.json` to `"Completed"` **in-place**. Do NOT copy or move the file anywhere.
+
+### Step 4b: Self-Verify Output Files (MANDATORY)
+
+Before outputting the Handover Block:
+1. Confirm `scope_detail.target_doc` file exists on disk and is non-empty (word count ≥ 1500).
+2. Confirm `/Users/daniel.chang/Desktop/ai/tasks/cards/<task_id>.json` exists with `status: "Completed"`.
+3. Confirm `/Users/daniel.chang/Desktop/ai/tasks/cards/<task_id>.json` still exists (Quality Validator reads it here).
+
+**If any check fails, do NOT output the Handover Block.** Fix the missing item first and re-verify.
 
 ## Constraints (FORBIDDEN)
 

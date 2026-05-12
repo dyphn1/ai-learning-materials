@@ -158,7 +158,7 @@ python multiagent_demo.py
 - [AutoGen 論文 (arXiv:2405.06715)](https://arxiv.org/abs/2405.06715)
 - [CrewAI 論文 (arXiv:2403.10123)](https://arxiv.org/abs/2403.10123)
 - [Self‑Healing Multi‑Agent Workflows (NeurIPS 2026)](https://arxiv.org/abs/2603.04568)
-- [openclaw Per‑Channel‑Peer 文檔](../docs/references/openclaw-per-channel-peer.md)
+- [openclaw Per‑Channel‑Peer 文檔](../references/openclaw-per-channel-peer.md)
 
 ---
 

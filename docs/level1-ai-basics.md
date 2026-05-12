@@ -129,7 +129,7 @@ LLM 仍然不是知識庫、不是邏輯引擎，也不是可靠的數學證明�
 - 練習 3：查閱模型參數量與本機記憶體需求，理解為什麼部署策略是 AI 工程的一部分。
 
 ## 延伸閱讀
-- [來源清單](../docs/references/level1-ai-basics-ref.md)
+- [來源清單](../references/level1-ai-basics-ref.md)
 
 ---
 *此文件由 AI agent 自動生成並持續更新*

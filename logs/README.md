@@ -1,9 +1,8 @@
 # Logs
 
-目前保留與 agentic workflow 有關的執行紀錄：
+執行紀錄目錄：
 
-- `agentic_pipeline.log`：runner 的狀態與錯誤紀錄。
-- `orchestrator.log`：workflow 摘要。
-- `agentic-pipeline-runs/<run_id>/`：每個角色 agent turn 的 stdout/stderr。
-
-舊的 `autodoc-*`、`daily_tasks_*`、失敗搜尋輸出的每日更新紀錄已移除，避免干擾真正的 workflow 診斷。
+- `pipeline.log` — pipeline 層級事件（START / CALL / ERROR / DONE）
+- `summary.log` — 每次執行完成的摘要（PIPELINE DONE）
+- `runs/{run_id}/` — 每次執行中每個 agent turn 的 stdout/stderr 原始輸出
+- `agents/{role}.log` — 每個 agent 的累計行動紀錄，作為下次執行的參考

@@ -7,15 +7,16 @@
 ```text
 .
 ├── .github/                 # agent、skill、workspace instructions
-├── core_learning/           # OpenClaw 基礎學習筆記
 ├── docs/                    # 主要 AI 技術學習文件
-│   └── references/          # 論文、官方文件、PDF 與引用紀錄
-├── learning_materials/      # 由 docs 轉成的讀書筆記 / glossary
-├── logs/                    # runner 與 workflow 執行紀錄
-├── requirements/            # 原始需求與需求拆解
+│   ├── openclaw/            # OpenClaw 學習文件（安裝、CLI、cron、MCP 等）
+│   ├── rag/                 # RAG 子主題深度文件
+│   └── AI_Glossary.md       # AI 術語詞典
+├── references/              # 論文、官方文件、PDF 與引用紀錄
+├── logs/                    # runner 執行紀錄（pipeline.log / summary.log / runs/ / agents/）
 ├── scripts/                 # 可執行自動化，主入口是 agentic_pipeline.py
 ├── tasks/                   # agentic workflow 狀態機與任務資料
-├── weekly-challenges/       # 保留的手動學習挑戰
+│   └── specs/               # 需求規格與 deep task 模板
+├── weekly-challenges/       # 每週一個主題的學習挑戰
 └── workflow/                # cron / workflow 設定說明
 ```
 
@@ -31,11 +32,13 @@ workflow 對應：
 
 ```text
 tasks/backlog.json
-  -> tasks/active/*.json
-  -> tasks/context/*-fact.json
-  -> docs/*.md
-  -> tasks/completed/*.json
-  -> tasks/archived/*.json
+  -> tasks/active/{task_id}.json           # 機器可讀狀態
+  -> tasks/{timestamp}_{slug}.md           # 人類可讀任務紀錄
+  -> tasks/context/{task_id}-fact.json     # fact sheet
+  -> docs/*.md                             # 最終知識文件
+  -> tasks/completed/{task_id}.json
+  -> tasks/archived/{task_id}.json
+  -> logs/agents/{role}.log                # per-agent 行動紀錄
 ```
 
 角色定義放在 `.github/agents/`：

@@ -160,7 +160,7 @@ apply_params(model, theta)
 3. 為一個視覺問答資料集添加 **Multimodal Adapter**，比較前後的 VQA Accuracy。
 
 ## 延伸閱讀
-- [Fine‑Tuning 參考資料](../docs/references/topic-fine-tuning-ref.md)
+- [Fine‑Tuning 參考資料](../references/topic-fine-tuning-ref.md)
 
 ---
 *此文件由 AI agent 自動生成並持續更新*

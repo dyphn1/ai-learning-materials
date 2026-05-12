@@ -193,7 +193,7 @@ Agent 依然有三個硬限制。第一，長期規劃仍然脆弱，模型很�
 - 練習 3：加入一個需要人工批准的危險工具，設計何時必須中斷等待使用者確認。
 
 ## 延伸閱讀
-- [來源清單](../docs/references/topic-agents-ref.md)
+- [來源清單](../references/topic-agents-ref.md)
 
 ---
 *此文件由 AI agent 自動生成並持續更新*

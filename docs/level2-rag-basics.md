@@ -143,7 +143,7 @@ python rag_advanced_demo.py
 3. 在 `retrieve` 中加入 BM25 混合，調整 `λ`，記錄延遲與召回率。
 
 ## 延伸閱讀
-- [RAG 參考資源](../docs/references/level2-rag-basics-ref.md)
+- [RAG 參考資源](../references/level2-rag-basics-ref.md)
 
 ---
 *此文件由 AI agent 自動生成並持續更新*

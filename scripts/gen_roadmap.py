@@ -10,7 +10,7 @@ import datetime
 from pathlib import Path
 
 DOCS_DIR = Path("/Users/daniel.chang/Desktop/ai/docs")
-OUTPUT_FILE = Path("/Users/daniel.chang/Desktop/ai/learning_roadmap.md")
+OUTPUT_FILE = Path("/Users/daniel.chang/Desktop/ai/roadmap.md")
 
 def extract_title(content):
     """Extract the first heading as title."""
