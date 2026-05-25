@@ -125,7 +125,7 @@ RAG 的工程折衷主要落在三個面向：延遲（latency）、準確性（
 - DPR repo: https://github.com/facebookresearch/DPR
 
 ---
-*Last updated: 2026-05-12T12:00:00Z | Word count: 1800 (估算) | Status: Pending Validation*
+*Last updated: 2026-05-17T03:30:00+08:00 | Word count: 1845 | Status: Pending Validation*
 # Agentic Retrieval‑Augmented Generation (Agentic RAG) — 修訂稿
 
 ---

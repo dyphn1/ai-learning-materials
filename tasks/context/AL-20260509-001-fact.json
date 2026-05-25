@@ -1,0 +1,25 @@
+{
+  "task_id": "AL-20260509-001",
+  "subject": "Agentic_RAG_2026_Update",
+  "scope": "ai-learning",
+  "researched_at": "2026-05-13T19:20:00+08:00",
+  "status": "Research_Done",
+  "verified_options": [],
+  "logic_flow": [
+    "Entry – LLM receives query",
+    "Reflection & Planning – Agent decides retrieval strategy",
+    "Tool Invocation – Agent calls retrieval tools",
+    "Iterative Refinement – Agent may spawn sub‑agents and re‑retrieve",
+    "Final Generation – Answer synthesis"
+  ],
+  "key_formulas": [],
+  "test_evidence": [],
+  "external_references": [
+    {
+      "title": "Agentic Retrieval‑Augmented Generation: A Survey on Agentic RAG",
+      "url": "https://arxiv.org/abs/2501.09136",
+      "type": "paper"
+    }
+  ],
+  "warnings": []
+}
